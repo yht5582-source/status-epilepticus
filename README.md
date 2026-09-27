@@ -14,11 +14,13 @@
 | 5–20 分 | 初始治療 | Lorazepam IV 0.1 mg/kg（上限 4 mg，可重複一次）；Midazolam IM 10 mg（>40 kg）或 5 mg（13–40 kg），單次；Diazepam IV 0.15–0.2 mg/kg（上限 10 mg，可重複一次）；替代：phenobarbital 15 mg/kg、直腸 diazepam 0.2–0.5 mg/kg |
 | 20–40 分 | 第二線 | Levetiracetam 60 mg/kg（上限 4,500 mg）、fosphenytoin 20 mg PE/kg（上限 1,500 mg PE）、valproate 40 mg/kg（上限 3,000 mg）；另列 phenytoin、phenobarbital、lacosamide |
 | >40 分 | 第三線／難治性 | 麻醉劑負荷與持續輸注劑量（NCS 2012）：midazolam、propofol、pentobarbital，自動換算 mg 與 mg/h；插管與連續腦波 |
+| 麻醉劑 ≥24 小時 | 超難治性（SRSE） | Ketamine（負荷 0.5–5 mg/kg、輸注 1–10 mg/kg/h，文獻範圍）、吸入性麻醉劑、免疫治療（72 小時內）、生酮飲食（勿與 propofol 併用） |
 
 其他功能：
 - **發作計時**：頂部時間軸游標即時移動，目前階段高亮；可輸入「已發作幾分鐘」回推發作開始時間。
 - **建議下一步**：依時間與已給藥物即時提示，例如超過 5 分鐘未給 benzodiazepine、第一劑後 5 分鐘仍發作要重複、benzodiazepine 無效改用第二線、第二線無效進入難治性處置；需要立即處理時轉為紅色。
 - **給藥紀錄**：每次按「記錄給藥」都會記下時間與劑量；可復原與複製。
+- **加護病房支持照護**：連續腦波、動脈導管與升壓劑；propofol 熱量計算（1.1 kcal/mL、每 mL 0.1 g 脂肪），劑量 >4 mg/kg/h 時提示 propofol infusion syndrome 風險。
 - **發作停止後檢核**：連續腦波（1 小時內開始，昏迷者至少 48 小時）、維持性抗癲癇藥、找原因、呼吸道評估、追蹤檢驗。
 
 ## 使用方式
@@ -45,6 +47,9 @@
 1. Glauser T, Shinnar S, Gloss D, et al. Evidence-based guideline: treatment of convulsive status epilepticus in children and adults: report of the Guideline Committee of the American Epilepsy Society. *Epilepsy Curr* 2016;16:48–61.
 2. Brophy GM, Bell R, Claassen J, et al. Guidelines for the evaluation and management of status epilepticus. *Neurocrit Care* 2012;17:3–23.
 3. Kapur J, Elm J, Chamberlain JM, et al. Randomized trial of three anticonvulsant medications for status epilepticus (ESETT). *N Engl J Med* 2019;381:2103–2113.
+4. Shorvon S, Ferlisi M. The treatment of super-refractory status epilepticus: a critical review of available therapies and a clinical treatment protocol. *Brain* 2011;134:2802–2818.
+5. Review and updates on the treatment of refractory and super refractory status epilepticus. [PMC8304618](https://pmc.ncbi.nlm.nih.gov/articles/PMC8304618/)
+6. Wickstrom R, et al. International consensus recommendations for management of new onset refractory status epilepticus (NORSE) including febrile infection-related epilepsy syndrome (FIRES). *Epilepsia* 2022.
 
 ## 授權
 

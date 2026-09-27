@@ -98,6 +98,7 @@ main{padding-block:18px 48px;display:grid;gap:18px}
 .phase{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden;min-width:0}
 .phase>header{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .phase>header .tm{font-family:var(--f-num);font-weight:700;font-size:13px;padding:2px 8px;border-radius:6px;color:#fff}
+.phase.e .tm{background:#7A1E14}
 .phase.a .tm{background:var(--p1)}.phase.b .tm{background:var(--p2)}.phase.c .tm{background:var(--p3)}.phase.d .tm{background:var(--p4)}
 .phase>header h3{font-size:16px;font-weight:700;flex:1}
 .phase>header .st{font-size:12.5px;color:var(--muted)}
@@ -150,7 +151,7 @@ footer ol{margin:0;padding-left:20px;display:grid;gap:3px}
 
 <header class="strip">
   <div class="wrap top">
-    <div class="brand"><h1>重積性癲癇時間軸</h1><p>AES 2016 · NCS 2012</p></div>
+    <div class="brand"><h1>重積性癲癇時間軸</h1><p>AES 2016 · NCS 2012 · SRSE</p></div>
     <div class="tbar" aria-hidden="true">
       <div class="phases" id="phases"><div class="a">穩定</div><div class="b">Benzodiazepine</div><div class="c">第二線</div><div class="d">第三線／難治</div><i class="cursor" id="cursor" style="left:0"></i></div>
       <div class="ticks"><span>0</span><span>5</span><span>20</span><span><i style="font-style:normal">40</i><i style="font-style:normal">60 分</i></span></div>
@@ -173,6 +174,9 @@ footer ol{margin:0;padding-left:20px;display:grid;gap:3px}
         <li>Glauser T, Shinnar S, Gloss D, et al. Evidence-based guideline: treatment of convulsive status epilepticus in children and adults: report of the Guideline Committee of the American Epilepsy Society. <i>Epilepsy Curr</i> 2016;16:48–61。</li>
         <li>Brophy GM, Bell R, Claassen J, et al. Guidelines for the evaluation and management of status epilepticus. <i>Neurocrit Care</i> 2012;17:3–23。</li>
         <li>Kapur J, Elm J, Chamberlain JM, et al. Randomized trial of three anticonvulsant medications for status epilepticus (ESETT). <i>N Engl J Med</i> 2019;381:2103–2113。</li>
+        <li>Shorvon S, Ferlisi M. The treatment of super-refractory status epilepticus: a critical review of available therapies and a clinical treatment protocol. <i>Brain</i> 2011;134:2802–2818。</li>
+        <li>Review and updates on the treatment of refractory and super refractory status epilepticus（ketamine 劑量、生酮飲食勿與 propofol 併用）. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8304618/">PMC8304618</a>。</li>
+        <li>Wickstrom R, et al. International consensus recommendations for management of new onset refractory status epilepticus (NORSE) incl. FIRES. <i>Epilepsia</i> 2022（72 小時內開始第一線免疫治療）。</li>
       </ol>
     </div>
   </footer>
@@ -216,7 +220,7 @@ const BENZO_ALT=[
  {id:'pbx',nm:'Phenobarbital',rt:'IV',lvl:'AES Level A',rep:false,d:w=>({v:15*w,u:'mg',t:'15 mg/kg，單一劑量'}),how:'以上三種都沒有時使用；注意呼吸抑制與低血壓。'},
  {id:'rdz',nm:'Diazepam 直腸',rt:'PR',lvl:'AES Level B',rep:false,d:w=>({v:cap(0.2*w,20),v2:cap(0.5*w,20),u:'mg',t:'0.2–0.5 mg/kg，上限 20 mg'}),how:'無靜脈管路時使用。鼻內或頰黏膜 midazolam 也可作為替代（依院內規範）。'}];
 const SECOND=[
- {id:'lev',nm:'Levetiracetam',rt:'IV',lvl:'AES Level U',d:w=>({v:cap(60*w,4500),u:'mg',t:'60 mg/kg，上限 4,500 mg'}),how:'單一劑量，約 10–15 分鐘輸注；交互作用少、心血管副作用少。'},
+ {id:'lev',nm:'Levetiracetam',rt:'IV',lvl:'AES Level U',d:w=>({v:cap(60*w,4500),u:'mg',t:'60 mg/kg，上限 4,500 mg'}),how:'單一劑量，約 10–15 分鐘輸注；交互作用少、心血管副作用少，肝功能不佳時較適合；經腎排除，腎功能不佳需調整維持劑量。'},
  {id:'fos',nm:'Fosphenytoin',rt:'IV',lvl:'AES Level U',d:w=>({v:cap(20*w,1500),u:'mg PE',t:'20 mg PE/kg，上限 1,500 mg PE'}),how:'速度 ≤150 mg PE/min；監測心電圖與血壓（低血壓、心律不整）。'},
  {id:'vpa',nm:'Valproate',rt:'IV',lvl:'AES Level B',d:w=>({v:cap(40*w,3000),u:'mg',t:'40 mg/kg，上限 3,000 mg'}),how:'單一劑量，約 10 分鐘輸注；避免用於肝病、懷孕、疑似粒線體疾病。'},
  {id:'pht',nm:'Phenytoin',rt:'IV',lvl:'NCS 2012',d:w=>({v:20*w,u:'mg',t:'20 mg/kg'}),how:'沒有 fosphenytoin 時使用；只能用生理食鹽水稀釋，速度 ≤50 mg/min；可再追加 5–10 mg/kg；監測心電圖與血壓。'},
@@ -225,7 +229,8 @@ const SECOND=[
 const INF=[
  {id:'mdzci',nm:'Midazolam',load:w=>`0.2 mg/kg = <b>${fmt(0.2*w)} mg</b>，以 2 mg/min 推注`,ci:w=>`0.05–2 mg/kg/h = <b>${fmt(0.05*w)}–${fmt(2*w)} mg/h</b>`,note:'突破性發作：追加 0.1–0.2 mg/kg，並每 3–4 小時增加 0.05–0.1 mg/kg/h；會產生耐受性。'},
  {id:'propci',nm:'Propofol',load:w=>`1–2 mg/kg = <b>${fmt(w)}–${fmt(2*w)} mg</b>`,ci:w=>`從 20 µg/kg/min 開始，30–200 µg/kg/min = <b>${fmt(30*w*60/1000)}–${fmt(200*w*60/1000)} mg/h</b>`,note:'低血壓；長時間高劑量（>80 µg/kg/min 超過 48 小時）注意 propofol infusion syndrome。'},
- {id:'pentci',nm:'Pentobarbital',load:w=>`5–15 mg/kg = <b>${fmt(5*w)}–${fmt(15*w)} mg</b>，≤50 mg/min；可再追加 5–10 mg/kg`,ci:w=>`0.5–5 mg/kg/h = <b>${fmt(0.5*w)}–${fmt(5*w)} mg/h</b>`,note:'低血壓、心臟抑制、腸阻塞；半衰期長，神經學評估受影響。'}];
+ {id:'pentci',nm:'Pentobarbital',load:w=>`5–15 mg/kg = <b>${fmt(5*w)}–${fmt(15*w)} mg</b>，≤50 mg/min；可再追加 5–10 mg/kg`,ci:w=>`0.5–5 mg/kg/h = <b>${fmt(0.5*w)}–${fmt(5*w)} mg/h</b>`,note:'低血壓、心臟抑制（常需升壓劑）、腸阻塞；半衰期長，神經學評估受影響。'},
+ {id:'ketci',nm:'Ketamine',load:w=>`0.5–5 mg/kg = <b>${fmt(0.5*w)}–${fmt(5*w)} mg</b>（文獻範圍）`,ci:w=>`1–10 mg/kg/h = <b>${fmt(w)}–${fmt(10*w)} mg/h</b>；常由 1–2 mg/kg/h 開始，依 cEEG 調整`,note:'NMDA 受體拮抗劑，用於 midazolam 或 propofol 效果不佳，或低血壓限制加量時。交感刺激多能維持血壓，但兒茶酚胺耗竭者仍可能低血壓；分泌物增加，可併用 glycopyrrolate；插管且 PaCO₂ 控制良好時，對顱內壓的影響小。'}];
 const ALL={};[...BENZO,...BENZO_ALT,...SECOND].forEach(d=>ALL[d.id]=d);
 INF.forEach(d=>ALL[d.id]={id:d.id,nm:d.nm+' 持續輸注'});
 
@@ -268,7 +273,9 @@ function nextSteps(st){
     if(since>=10*MIN||st.m>=40){alarm=true;out.push('<b>第二線藥物後仍在發作（難治性）</b>：可換另一種第二線藥物，或插管並開始麻醉劑持續輸注（midazolam、propofol、pentobarbital），同時進行連續腦波。');}
     else out.push(`第二線藥物已給，約 ${mmss(10*MIN-since)} 後評估是否停止；同時準備插管與麻醉劑輸注。`);
   }
-  if(st.inf)out.push('麻醉劑輸注中：以連續腦波為準調整，目標為電生理發作停止或 burst suppression，維持 24–48 小時後逐步減量；同時持續給維持性抗癲癇藥。');
+  if(st.inf){out.push('麻醉劑輸注中：以連續腦波為準調整，目標為電生理發作停止或 burst suppression，維持 24–48 小時後逐步減量；同時持續給維持性抗癲癇藥。');
+    const t0=INF.flatMap(d=>e.given[d.id]||[]).sort((a,b)=>a-b)[0];
+    if(t0&&now-t0>=24*3600000){alarm=true;out.push('<b>麻醉劑已超過 24 小時仍需使用：超難治性重積性癲癇（SRSE）</b>——考慮 ketamine、吸入性麻醉劑、免疫治療或生酮飲食（勿與 propofol 併用）。');}}
   if(st.m>=60&&!st.inf)out.push('NCS 2012：應在發作開始後 60 分鐘內確實控制發作。');
   if(!e.ck.eeg&&st.m>=30)out.push('安排連續腦波（NCS：懷疑持續發作時 1 小時內開始）。');
   return {out,alarm};
@@ -308,12 +315,35 @@ function render(){
     <div class="sub">以上都沒有時</div><div class="drugs">${BENZO_ALT.map(d=>drugHTML(d,w,e.given[d.id])).join('')}</div></div></section>
   <section class="${cls(2)}">${hd(2,'20–40 分','第二線治療','擇一，單一劑量')}<div class="pbody"><div class="drugs">${SECOND.map(d=>drugHTML(d,w,e.given[d.id])).join('')}</div>
     <p class="muted">ESETT（2019）：levetiracetam、fosphenytoin、valproate 對 benzodiazepine 無效的重積性癲癇效果相近（約半數停止發作）。</p></div></section>
-  <section class="${cls(3)}">${hd(3,'>40 分','第三線／難治性重積性癲癇','插管、連續腦波、麻醉劑持續輸注')}<div class="pbody">
+  <section class="${cls(3)}">${hd(3,'>40 分','第三線／難治性重積性癲癇（RSE）','benzodiazepine＋至少一種第二線藥物仍無效')}<div class="pbody">
     <ul><li>AES 2016：此階段沒有明確證據；可重複第二線藥物，或使用麻醉劑量的 midazolam、propofol、pentobarbital（thiopental），都需連續腦波監測。</li>
-    <li>NCS 2012：benzodiazepine 加一種抗癲癇藥後仍發作即為難治性；目標為電生理發作停止或 burst suppression，維持 24–48 小時後逐步減量。</li></ul>
-    <div class="tbl"><table class="inf"><thead><tr><th>藥物（NCS 2012）</th><th>負荷劑量</th><th>持續輸注</th><th></th></tr></thead><tbody>
+    <li>難治性是依「治療失敗」定義，不是依時間：給足 benzodiazepine 與至少一種第二線藥物後仍發作（NCS 2012），臨床上通常已超過 40 分鐘。</li>
+    <li>收治加護病房，多需氣管插管；以連續腦波為準，目標為電生理發作停止或 burst suppression，維持 24–48 小時後逐步減量。</li></ul>
+    <div class="tbl"><table class="inf"><thead><tr><th>藥物</th><th>負荷劑量</th><th>持續輸注</th><th></th></tr></thead><tbody>
     ${INF.map(d=>`<tr><td><b style="font-family:var(--f-body)">${d.nm}</b><br><span class="muted">${d.note}</span></td><td>${w>0?d.load(w):'輸入體重'}</td><td>${w>0?d.ci(w):'—'}</td><td><button type="button" class="btn small ${e.given[d.id]?'':'primary'}" data-give="${d.id}">${e.given[d.id]?'已開始':'記錄開始'}</button></td></tr>`).join('')}
-    </tbody></table></div><p class="muted">其他選項（ketamine 等）證據有限，依院內規範與神經科會診。</p></div></section>`;
+    </tbody></table></div><p class="muted">Midazolam、propofol、pentobarbital 劑量依 NCS 2012；ketamine 無指引建議劑量，採近年文獻回顧範圍（證據有限，依神經科會診與院內規範）。</p></div></section>`;
+  const infStart=INF.flatMap(d=>e.given[d.id]||[]).sort((a,b)=>a-b)[0];
+  const infH=infStart?(now-infStart)/3600000:null;
+  h+=`<section class="phase e">${hd(4,'麻醉劑 ≥24 小時','超難治性重積性癲癇（SRSE）',infStart?`麻醉劑已輸注 ${infH.toFixed(1)} 小時${infH>=24?'，已達 SRSE 時間':''}`:'')}<div class="pbody">
+    <ul><li><b>定義</b>：麻醉劑開始後 ≥24 小時仍持續或復發，包括減量或停藥時復發（Shorvon &amp; Ferlisi 2011）。</li>
+    <li><b>Ketamine</b>：劑量見上表；可與其他麻醉劑併用。</li>
+    <li><b>吸入性麻醉劑</b>：isoflurane 或 desflurane，需麻醉科與專用設備。</li>
+    <li><b>免疫治療</b>：懷疑自體免疫腦炎（如抗 NMDAR 腦炎）或 NORSE／FIRES 時，排除感染後給高劑量類固醇、IVIG 或血漿置換；國際共識建議 72 小時內開始第一線免疫治療。</li>
+    <li><b>生酮飲食</b>：可作為輔助治療。<b>不要與 propofol 併用</b>，會增加致命性 propofol infusion syndrome 的風險；開始前先改用其他麻醉劑。</li>
+    <li>其他（低體溫、神經調控、癲癇手術等）依個案與神經科討論。</li></ul></div></section>`;
+  const pc=e.pcal||{},pr=n(pc.rate),pw=w;
+  const mlh=pr>0&&pw>0?pr*pw*60/10000:NaN,kcal=mlh*24*1.1,fat=mlh*24*0.1,mgkgh=pr*60/1000;
+  h+=`<section class="panel"><div class="sec"><h2>加護病房支持照護</h2><span>跨團隊監測</span></div>
+    <ul style="margin:0;padding-left:18px;display:grid;gap:4px;font-size:14.5px">
+    <li><b>連續腦波</b>：插管、使用麻醉劑或肌肉鬆弛劑後，常轉為非痙攣性重積性癲癇，需以 cEEG 確認放電是否真正停止並據以調整麻醉劑。</li>
+    <li><b>血行動力學與呼吸</b>：麻醉劑與抗癲癇藥常造成低血壓與呼吸抑制；放置動脈導管，必要時及早使用升壓劑。</li>
+    <li><b>營養與代謝</b>：propofol 的脂質乳劑熱量要計入每日營養處方，避免過度餵食與高三酸甘油酯血症；並監測三酸甘油酯、CK、乳酸、心電圖以早期發現 propofol infusion syndrome（主要與高劑量、長時間輸注有關）。</li></ul>
+    <div class="row">
+      <div class="fld" style="width:190px"><label for="pc-rate">Propofol 劑量 <span class="unit">µg/kg/min</span></label><input id="pc-rate" data-pc="rate" inputmode="decimal" value="${esc(pc.rate??'')}" placeholder="例：50"></div>
+      <span class="muted">以 1%（10 mg/mL）、1.1 kcal/mL、每 mL 含 0.1 g 脂肪計算；體重取上方輸入值</span></div>
+    ${isFinite(mlh)?`<div class="drug ${mgkgh>4?'':'given'}"><div><div class="nm">Propofol ${pr} µg/kg/min（${mgkgh.toFixed(1)} mg/kg/h）</div><div class="dose">${mlh.toFixed(1)} mL/h <small>每日 ${Math.round(kcal)} kcal、脂肪 ${Math.round(fat)} g</small></div></div><span></span>
+      <div class="how">${mgkgh>4?'<b style="color:var(--crit)">劑量 >4 mg/kg/h：若持續超過 48 小時，propofol infusion syndrome 風險增加。</b>':'劑量未超過 4 mg/kg/h。'}這些熱量與脂肪需從腸道或靜脈營養處方中扣除。</div></div>`:''}
+  </section>`;
   if(e.onset){
     h+=`<section class="panel"><div class="sec"><h2>發作停止後</h2><span>NCS 2012</span></div><div class="cks">${POST.map(([k,l,s])=>`<label class="ck"><input type="checkbox" data-post="${k}" ${e.post[k]?'checked':''}><span>${l}${s?`<small>${s}</small>`:''}</span></label>`).join('')}</div></section>`;
   }
@@ -379,7 +409,9 @@ document.addEventListener('click',ev=>{
   save();render();
 });
 document.addEventListener('input',ev=>{
-  const t=ev.target;if(!t.matches('[data-f]'))return;
+  const t=ev.target;
+  if(t.matches('[data-pc]')){const e=E();e.pcal=e.pcal||{};e.pcal[t.dataset.pc]=t.value;save();const id=t.id,pos=t.selectionStart;render();const el=document.getElementById(id);if(el){el.focus();try{el.setSelectionRange(pos,pos);}catch(x){}}return;}
+  if(!t.matches('[data-f]'))return;
   E()[t.dataset.f]=t.value;save();
   if(t.dataset.f==='wt'){const id=t.id,pos=t.selectionStart;render();const el=document.getElementById(id);if(el){el.focus();try{el.setSelectionRange(pos,pos);}catch(e){}}}
 });
